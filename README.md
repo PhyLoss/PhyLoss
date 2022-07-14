@@ -1,16 +1,16 @@
-### Hi there 👋
+### PhyLoss - phylostratigraphy of gene families gain and loss
+The repository contains the data and the analysis scripts accompanying the manuscript **Macroevolutionary dynamics of gene family gain and loss across multicellular eukaryotic lineages**
 
-<!--
-**PhyLoss/PhyLoss** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+## Requirements
+To run the scripts you need to install Python 3.6 or later, and MMseqs2
+Available at:
+- http://www.python.org/getit/
+- https://github.com/soedinglab/MMseqs2
 
-Here are some ideas to get you started:
+## Team
+* **Mirjana Domazet-Lošo**
+* **Tin Široki**
+* **Tomislav Domazet-Lošo**
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## Acknowledgments
+This work was supported by the Croatian Science Foundation under the project IP-2016-06- 5924, the City of Zagreb, the Adris Foundation, the European Regional Development Fund (KK.01.1.1.01.0009 DATACROSS).
