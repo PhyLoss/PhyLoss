@@ -13,4 +13,4 @@ available at:
 * **Tomislav Domazet-Lošo**
 
 ## Acknowledgments
-This work was supported by the Croatian Science Foundation under the project IP-2016-06- 5924, the City of Zagreb, the Adris Foundation, the European Regional Development Fund (KK.01.1.1.01.0009 DATACROSS). We used the computational resources of the Isabella cluster at Zagreb University Computing Center (Srce) and of the Institute Ruđer Bošković, Zagreb.
+This work was supported by the Croatian Science Foundation under the project IP-2016-06- 5924, the City of Zagreb, the Adris Foundation, the European Regional Development Fund (KK.01.1.1.01.0009 DATACROSS). We used the computational resources of the Isabella cluster at Zagreb University Computing Center (Srce) and the Institute Ruđer Bošković, Zagreb.
