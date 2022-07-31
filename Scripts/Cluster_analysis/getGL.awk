@@ -28,11 +28,10 @@ function get_a(a ) {
 	#a[39] = 131567	# Cellular_organisms
 }
 
-# compute taxID from an id of the form "pgi|0000000003120175935|ti|312017|pi|0|"
+# compute taxID from an id of the form "pid|0000000003120175935|tx|312017|"
 function getTaxId(id) {
-	#Example: id == "pgi|0000000003120175935|ti|312017|pi|0|" ---> taxid=312017
-	pos = index(id, "ti|");
-	s = substr(id, pos + 3); # skip "ti|"
+	pos = index(id, "tx|");
+	s = substr(id, pos + 3); # skip "tx|"
 	# find next "|", which ends taxid
 	pos2 = index(s, "|");
 	taxid = substr(s, 1, pos2 - 1);
@@ -205,9 +204,9 @@ BEGIN {
 	}
 	
 	# --------- NEW CLUSTER --------- 
-	#(2) Cluster representative: pgi|0000000005412619063|ti|54126|pi|0|	Number of members in the cluster: 1
+	#(2) Cluster representative: pid|0000000005412619063|tx|54126|	Number of members in the cluster: 1
 	#Cluster members: 
-	#(1) pgi|0000000005412619063|ti|54126|pi|0|
+	#(1) pid|0000000005412619063|tx|54126|
 	#Pristionchus_pacificus	15
 
 	else if ($0 ~ /Cluster representative/) { # new cluster
@@ -221,7 +220,7 @@ BEGIN {
 
 		# new cluster representative
 		numMembers = $NF;
-		clusterRepresentative = $4; # e.g. pgi|0000000002251641234|ti|225164|pi|0|
+		clusterRepresentative = $4; # e.g. pid|0000000005412619063|tx|54126|
 		# DEBUG - ok
 		print "\n(" ++cntCluster ") clusterRepresentative = " clusterRepresentative "\tnumMembers = " numMembers;
 		
@@ -239,11 +238,11 @@ BEGIN {
 			# set count-s for all taxa to 0
 			for (i = 1; i <= numTaxId; i++) cntCluMembers[arr_taxID[i]] = 0; 				
 			# set find for the first member
-			find = "(1)" # used for recognizing taxid row, e.g. (1) pgi|0000000005412619063|ti|54126|pi|0|	
+			find = "(1)" # used for recognizing taxid row, e.g. (1) pid|0000000005412619063|tx|54126|
 		} 
 		else {
 			# index(in, find)			
-			if (index($0, find) > 0) { # taxid row, e.g. (1) pgi|0000000005412619063|ti|54126|pi|0|				
+			if (index($0, find) > 0) { # taxid row, e.g. (1) pid|0000000005412619063|tx|54126|			
 				taxid = getTaxId($2)
 				++ cntCluMembers[taxid]; # number of taxon's genes in the cluster
 				if (taxid == t) { # determine whether the cluster contains focal taxon (e.g. 7227)
@@ -266,7 +265,7 @@ BEGIN {
 				print find "\t" taxid "\t" ps			
 				# prepare for the next member
 				++ cnt; 
-				find = "(" cnt ")" # used for recognizing taxid row, e.g. (1) pgi|0000000005412619063|ti|54126|pi|0|
+				find = "(" cnt ")" # used for recognizing taxid row, e.g. (1) pid|0000000005412619063|tx|54126|
 			}		
 		} # end else		
 	} # end else		

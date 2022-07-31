@@ -63,7 +63,6 @@ def getInput(inputFile, dictPS):
 
 # copute taxId from geneId
 def getTaxId(geneId):
-	#if geneId == pgi|0000000003120175935|ti|312017|pi|0| then get taxid 312017
 	array = geneId.split("|")
 	return array[3]	
 # end getTaxId

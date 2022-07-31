@@ -27,7 +27,7 @@ do
 	rm -rf ${path}Hsap/dbAllPlus_clu_${c/./_}_Hsap_out_EXT.txt
 	cat allLCA_n_667.txt >> ${path}Hsap/dbAllPlus_clu_${c/./_}_Hsap_out_EXT.txt
 	cat ${path}Hsap/dbAllPlus_clu_${c/./_}_Hsap_out.txt >> ${path}Hsap/dbAllPlus_clu_${c/./_}_Hsap_out_EXT.txt		
-	time awk -v t=9606 -v P=39 -f getGL_HS.awk ${path}Hsap/dbAllPlus_clu_${c/./_}_Hsap_out_EXT.txt > ${path}Hsap/res_dbAllPlus_clu_${c/./_}_Hsap_out_EXT.txt
+	time awk -v t=9606 -v P=39 -f getGL.awk ${path}Hsap/dbAllPlus_clu_${c/./_}_Hsap_out_EXT.txt > ${path}Hsap/res_dbAllPlus_clu_${c/./_}_Hsap_out_EXT.txt
 	awk '{if ($0 ~ /Total/) {cnt = 1; print} else if (cnt >= 1 && cnt <= 39){ cnt++; print}}' ${path}Hsap/res_dbAllPlus_clu_${c/./_}_Hsap_out_EXT.txt > ${path}Hsap/gain_loss_${c/./_}_Hsap.txt
 
 	rm -rf ${path}Hsap/dbAllPlus_clu_${c/./_}_Hsap_out_EXT.txt
