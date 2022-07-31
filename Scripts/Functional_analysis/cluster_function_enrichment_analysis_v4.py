@@ -161,7 +161,7 @@ if __name__ == "__main__":
             print("inputing categories from file " + str(file_counter))
             file_counter += 1
             for line in f:
-                if line.startswith("pgi"):
+                if line.startswith("pid"):
                     line_split = line.split("\t")
 
                     if GO:

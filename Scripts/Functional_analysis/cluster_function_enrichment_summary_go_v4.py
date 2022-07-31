@@ -166,7 +166,7 @@ def make_gain_loss_count_summary(out_path, out_counts_phyl, out_10_perc, out_all
             if len(line_split) < 2:
                 continue
 
-            if line_split[1].startswith("pgi"):
+            if line_split[1].startswith("pid"):
                 cl_in = {}
                 cl_in["id_line"] = "\t".join(line_split[1:]).strip()
                 cl_in["ps_start"] = int(line_split[3])
@@ -186,7 +186,7 @@ def make_gain_loss_count_summary(out_path, out_counts_phyl, out_10_perc, out_all
                 continue
             line_split = line.split("\t")
 
-            if line_split[0].startswith("pgi"):
+            if line_split[0].startswith("pid"):
                 cluster_id = line_split[0].strip()
                 cluster_2_hyper[cluster_id] = []
             else:

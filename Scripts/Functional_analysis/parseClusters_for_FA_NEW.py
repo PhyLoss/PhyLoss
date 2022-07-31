@@ -71,7 +71,7 @@ def constructOutput(inFile, outFile, PS_MAX):
                 numGenes = clusterReprLine[10]
                 #print(firstRow)
                 for line in inFile: # read genes' lines (geneId + ps)
-                    if line.find("pgi") != -1: 
+                    if line.find("pid") != -1: 
                         geneArr = line.split()
                         line2 = inFile.readline()
                         geneArr2 = line2.split()
