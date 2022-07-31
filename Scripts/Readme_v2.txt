@@ -65,7 +65,13 @@ REQUIREMENTS:
 
 ----------- CLUSTER ANALYSIS PIPELINE -----------
 
-(1) create the subolder "DB" in the analysis folder 
+(1) create the subolders "DB_original" and "DB" in the analysis folder 
+	# For each proteome in "DB_original" (original fasta files):
+	#	- remove all proteins with empty protein sequences 
+	#	- in case of multiple splicing variants, keep the protein with the longest sequence, and other variants (proteins with the same name) delete
+	#   - rename all proteins to using into pgi number (using ordinal numbers + genome ID)
+	# Use clean.awk + filter.awk
+	>> bash filter_E.sh taxIDNames.txt path_to_DB_original path_to_DB > filter_E.log
 
 (2) copy the database fasta files to the subfolder "DB"
 
