@@ -5,7 +5,7 @@ A function is assigned to a cluster if its hypergeometric p-adjusted value is lo
 (P_ADJ_CUTOFF) and half or more genes in the cluster are annotated with the corresponding function.
 The paths and options can be set on the start of the script by changing variables, see comments for instructions.
 """
-# Usage: time python3 cluster_function_enrichment_summary_cog_v2.py > cog_v2.out
+# Usage: time python3 cluster_function_enrichment_summary_cog_v2.py > cog_v2.ou
 
 __version__ = "1.0"
 __author__ = "Tin Siroki"
@@ -162,7 +162,7 @@ def make_gain_loss_count_summary(out_path, out_counts_phyl, out_10_perc, out_all
                     continue
                 line_split = line.split("\t")
 
-                if line_split[0].startswith("pgi"):
+                if line_split[0].startswith("pid"):
                     cluster_id = line_split[0].strip()
                     cluster_2_hyper[cluster_id] = []
                 else:
