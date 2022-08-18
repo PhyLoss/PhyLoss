@@ -184,7 +184,7 @@ def make_gain_loss_count_summary(out_path, out_counts_phyl, out_10_perc, out_all
                 if line == "" or line == "\r" or line == "\n":
                     continue
 
-                if "pgi" in line:
+                if "pid" in line:
                     line_split = line.split("\t")
                     cluster_id = line_split[1]
                     category = line_split[6].strip("[")
