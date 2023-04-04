@@ -35,7 +35,7 @@
 		
 		
 		- to get the above format for protein sequences (i.e. pid|0000000000000012601|tx|1260|), 
-		you may use the script "filter_E.sh" that generates the .faa output from the input fasta files with orginal names and a file containg all genomes' taxID-s
+		you may use the script "filter_E.sh" that generates the .faa output from the original fasta files
 			- the required input: taxIDNames.txt (see (2)) - a list of all taxa/genomes with their taxID-s and a folder of input fasta files 
 			> bash filter_E.sh taxIDNames.txt path_to_original_fasta_files path_to_edited_fasta_files > filter_E.log
 
