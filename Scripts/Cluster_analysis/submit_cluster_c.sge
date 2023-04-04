@@ -10,7 +10,7 @@
 #SBATCH --mem 20000
 
 
-echo "Starting experiment!!!"
+echo "Starting experiment."
 
 c_start=0
 c_end=0.8
@@ -41,4 +41,4 @@ do
 
 done
 
-echo "Experiment done"
+echo "Experiment done."
