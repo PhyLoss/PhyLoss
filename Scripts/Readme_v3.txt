@@ -92,15 +92,7 @@ PREREQUISITES:
 REQUIREMENTS: 
 	- create an analysis folder
 	- copy DATA files to the analysis folder
-	- copy SCRIPTS files copy to the analysis folder
-		- getAllLCA.py
-		- getAllPS.py
-		- getGL.py
-			- OLD: getGL_Athal.awk
-			- OLD: numCluster_Athal.sge
-			- OLD: numClusters.py
-		- submit_cluster_c.sge
-		- treeTaxId_all.py		
+	- copy SCRIPTS files to the analysis folder
 
 (1) create the subolders "DB", "All_faa" in the analysis folder 
 	>> mkdir DB
