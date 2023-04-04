@@ -1,5 +1,5 @@
 ### PhyLoss - phylostratigraphy of gene families gain and loss
-The repository contains the data and the analysis scripts accompanying the manuscript Domazet-Lošo M., Široki T., Šimičević K., Domazet-Lošo T. 2023, **Macroevolutionary dynamics of gene family gain and loss along multicellular eukaryotic lineages**.
+The repository contains the sample data and the analysis scripts accompanying the manuscript Domazet-Lošo M., Široki T., Šimičević K., Domazet-Lošo T. 2023, **Macroevolutionary dynamics of gene family gain and loss along multicellular eukaryotic lineages**.
 
 ## Requirements
 To run the scripts you need to install Python 3.6 or later, and MMseqs2
