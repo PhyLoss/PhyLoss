@@ -8,7 +8,7 @@ available at:
 - https://github.com/soedinglab/MMseqs2
 
 ## Instructions to run scripts
-Available in Scripts/Readme_v3.txt
+Available in [Scripts/Readme_v3.txt](https://github.com/PhyLoss/PhyLoss/blob/main/Scripts/Readme_v3.txt)
 
 ## Team
 * **Mirjana Domazet-Lošo**
