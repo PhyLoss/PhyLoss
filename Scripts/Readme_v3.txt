@@ -35,8 +35,9 @@
 		
 		
 		- to get the above format for protein sequences (i.e. pid|0000000000000012601|tx|1260|), 
-		you may use the script "filter_E.sh" that generates the .faa output from the original fasta files
-			- the required input: taxIDNames.txt (see (2)) - a list of all taxa/genomes with their taxID-s and a folder of input fasta files 
+			you may use the script "filter_E.sh" that generates the .faa output from the original fasta files
+			- the required input: a path to folder containing original fasta files and 
+				a file containing a list of all taxa/genomes with their taxID-s and names (taxIDNames.txt; see (2))
 			> bash filter_E.sh taxIDNames.txt path_to_original_fasta_files path_to_edited_fasta_files > filter_E.log
 
 (2) taxIDNames.txt --> save in YOUR_PATH/Data
@@ -66,7 +67,7 @@
 	The clusters are copmuted using scripts in "CLUSTER ANALYSIS PIPELINE".
 
 (5) eggnog files --> save in YOUR_PATH/Data
-		(see an example file in PhyLoss/ExampleData)
+		(see an example file in PhyLoss/ExampleData/chunk_example0.emapper.annotations)
 		- the precomputed genes functional annotations (COG and GO annotations):
 			- extract to the subfolder "PATH_TO_ANALYSIS_FOLDER/Data/eggnogResults"
 			- for more information, see "FUNCTIONAL ANALYSIS PIPELINE", step (2)
@@ -92,7 +93,15 @@ PREREQUISITES:
 REQUIREMENTS: 
 	- create an analysis folder
 	- copy DATA files to the analysis folder
-	- copy SCRIPTS files to the analysis folder
+	- copy SCRIPTS files copy to the analysis folder
+		- getAllLCA.py
+		- getAllPS.py
+		- getGL.py
+			- OLD: getGL_Athal.awk
+			- OLD: numCluster_Athal.sge
+			- OLD: numClusters.py
+		- submit_cluster_c.sge
+		- treeTaxId_all.py		
 
 (1) create the subolders "DB", "All_faa" in the analysis folder 
 	>> mkdir DB
@@ -187,23 +196,31 @@ REQUIREMENTS:
 	- position in the analysis folder
 		>> cd PATH_TO_ANALYSIS_FOLDER
 	
+OLD???????????
+---	
 	- in the analysis folder (replace PATH_TO_ANALYSIS_FOLDER with the folder name) create the folders for the functional analysis reults, e. g.:
 		>> mkdir PATH_TO_ANALYSIS_FOLDER/cluster_hyper_cog cluster_hyper_go cluster_hyper_cog_summary_v2 cluster_hyper_go_summary_v2 phylostratum_hyper_cog_v2 phylostratum_hyper_go_v2	
+---
 		
 (1) computing the clusters for functional analysis using getGL_genes.py (output folder: ClusterAnalysis)
 		- in the analysis folder create the subolder "ClusterAnalysis", and its subfolders "c_0_0" to "c_0_8"
-			>> mkdir PATH_TO_ANALYSIS_FOLDER/ClusterAnalysis
-			>> mkdir PATH_TO_ANALYSIS_FOLDER/ClusterAnalysis/c_0_0 c_0_1 c_0_2 c_0_3 c_0_4 c_0_5 c_0_6 c_0_7 c_0_8
+			>> mkdir YOUR_PATH/ClusterAnalysis/COG
+			>> mkdir YOUR_PATH/ClusterAnalysis/GO
+			>> mkdir YOUR_PATH/ClusterAnalysis/COG/c_0_0 c_0_1 c_0_2 c_0_3 c_0_4 c_0_5 c_0_6 c_0_7 c_0_8
+			>> mkdir YOUR_PATH/ClusterAnalysis/GO/c_0_0 c_0_1 c_0_2 c_0_3 c_0_4 c_0_5 c_0_6 c_0_7 c_0_8
 	
-	Use getGL_genes.py to get list of clusters for a focal species and a c-value (or getGL_genes.sh for all c-values):
+	Use getGL_genes.py to get list of clusters for a focal species and a c-value (or getGL_genes.sh for all c-values);
+	e.g. for H. sapiens (taxID = 9606, the option -f; c=0.0, the input tsv file: -i PATH_TO_TSV_FOLDER/results_0_0/db_clu_all.tsv)
 	>> time python3 getGL_genes.py -f 9606 \
-					-p /storage/home/mdomazet/ProteinsT/Data/Parents/ \
-					-i /storage/home/mdomazet/ProteinsT/Data/tsv_new/results_0_0/db_clu_all.tsv \
-					-l /storage/home/mdomazet/ProteinsT/Data/allLCA.txt \
-					-g /storage/home/mdomazet/ProteinsT/Data/ClusterAnalysis/0_0/res_dbAll_Hsap_0_0_genes.txt \
-					-s /storage/home/mdomazet/ProteinsT/Data/ClusterAnalysis/0_0/summary_GL_Hsap_0_0.txt > out.txt
+					-p YOUR_PATH/Data/Parents/ \
+					-i PATH_TO_TSV_FOLDER/results_0_0/db_clu_all.tsv \
+					-l YOUR_PATH/Data/allLCA.txt \
+					-g YOUR_PATH/Data/ClusterAnalysis/0_0/res_dbAll_Hsap_0_0_genes.txt \
+					-s YOUR_PATH/Data/ClusterAnalysis/0_0/summary_GL_Hsap_0_0.txt > out.txt
 	Running time: 15-20 seconds
 	
+	Use getGL_genes.sh to get list of clusters and their genes for a focal species and all c-values (0.0 to 0.8);
+	e.g. for H. sapiens (taxID = 9606, the option -f; c=0.0, the input tsv file: -i PATH_TO_TSV_FOLDER/results_0_0/db_clu_all.tsv)
 	>> bash getGL_genes.sh 9606 \
 	> /storage/home/mdomazet/ProteinsT/Data/tsv_new \
 	> /storage/home/mdomazet/ProteinsT/Data/Parents \ 
@@ -223,31 +240,18 @@ REQUIREMENTS:
 		pid|0000000001022418929|tx|10224|
 		pid|0000000000073753127|tx|7375|
 	
-			-----------------
-				OLD:
-				Input: path_to_mmseqs_results_root_folder, a focal species short name, output folder, the number of phylostrata for the focal species
-					>> nohup bash parseClusters_NEW.sh path_to_mmseqs_results_root_folder Hsap ./Clusters_2022 39 > parseClusters_Hsap.out &
-			
-				Output:
-					- each cluster contains a list of genes in the cluster
-					- the first row contains a cluster_ordinal_number, a cluster representative/geneId
-						+ the cluster representative's taxID (1052585), phylostratum_gain (11), phylostratum_loss (14), the number of genes in the cluster (3)
-			--------------
-	
 
-(2) - extract eggnog functional annotations to a folder, e. g. PATH_TO_ANALYSIS_FOLDER/Data/eggnogResults
-	
+(2) - extract eggnog functional annotations to a folder, e. g. YOUR_PATH/Data/eggnogResults
+	E.g. (see an example file in PhyLoss/ExampleData)
 	- extracted files (emapper.annotations) 
 		contain list of genes withe their GO and COG annotations
 	
-	E.g.
 	-------------
 	# emapper version: emapper-1.0.3-5-g6972f60 emapper DB: 4.5.1
 	# time: Thu Jul 23 17:46:52 2020
 	#query_name	seed_eggNOG_ortholog	seed_ortholog_evalue	seed_ortholog_score	predicted_gene_name	GO_terms	KEGG_KOs	BiGG_reactions	Annotation_tax_scope	OGs	bestOG|evalue|score	COG cat	eggNOG annot
 	pid|0000000000000008821|tx|882|	882.DVU0001	5.8e-253	878.2	DNAA	GO:0000166,GO:0001882,GO:0001883,GO:0003674,GO:0003676,GO:0003677,GO:0003688,GO:0003824,GO:0005488,GO:0005524,GO:0005575,GO:0005618,GO:0005622,GO:0005623,GO:0005737,GO:0005886,GO:0006139,GO:0006152,GO:0006163,GO:0006164,GO:0006172,GO:0006195,GO:0006200,GO:0006461,GO:0006725,GO:0006753,GO:0006793,GO:0006796,GO:0006807,GO:0008150,GO:0008152,GO:0009056,GO:0009058,GO:0009116,GO:0009117,GO:0009119,GO:0009123,GO:0009124,GO:0009125,GO:0009126,GO:0009127,GO:0009128,GO:0009132,GO:0009133,GO:0009135,GO:0009136,GO:0009141,GO:0009143,GO:0009144,GO:0009146,GO:0009150,GO:0009152,GO:0009154,GO:0009156,GO:0009158,GO:0009161,GO:0009163,GO:0009164,GO:0009165,GO:0009166,GO:0009167,GO:0009168,GO:0009169,GO:0009179,GO:0009180,GO:0009185,GO:0009188,GO:0009199,GO:0009203,GO:0009205,GO:0009207,GO:0009259,GO:0009260,GO:0009261,GO:0009987,GO:0016020,GO:0016043,GO:0016311,GO:0016462,GO:0016787,GO:0016817,GO:0016818,GO:0016887,GO:0017076,GO:0017111,GO:0018130,GO:0019438,GO:0019439,GO:0019637,GO:0019693,GO:0022607,GO:0030312,GO:0030554,GO:0032549,GO:0032550,GO:0032553,GO:0032555,GO:0032559,GO:0034641,GO:0034654,GO:0034655,GO:0035639,GO:0036094,GO:0042278,GO:0042451,GO:0042454,GO:0042455,GO:0043167,GO:0043168,GO:0043565,GO:0043933,GO:0044085,GO:0044237,GO:0044238,GO:0044248,GO:0044249,GO:0044270,GO:0044271,GO:0044281,GO:0044424,GO:0044464,GO:0044710,GO:0046031,GO:0046034,GO:0046128,GO:0046129,GO:0046130,GO:0046390,GO:0046434,GO:0046483,GO:0046700,GO:0051259,GO:0051260,GO:0055086,GO:0065003,GO:0070271,GO:0071704,GO:0071822,GO:0071840,GO:0071944,GO:0072521,GO:0072522,GO:0072523,GO:0090407,GO:0097159,GO:1901135,GO:1901136,GO:1901137,GO:1901265,GO:1901292,GO:1901293,GO:1901360,GO:1901361,GO:1901362,GO:1901363,GO:1901564,GO:1901565,GO:1901566,GO:1901575,GO:1901576,GO:1901657,GO:1901658,GO:1901659	K02313		bactNOG[38]	05CI4@bactNOG,0GB44@delNOG,16QDA@proNOG,COG0593@NOG	NA|NA|NA	L	it binds specifically double-stranded DNA at a 9 bp consensus (dnaA box) 5'-TTATC CA A CA A-3'. DnaA binds to ATP and to acidic phospholipids (By similarity)
 	.....	
--------------
 	
 	
 (3) Computing COG and GO annotations for clusters
