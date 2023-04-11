@@ -3,7 +3,7 @@ __author__ = "Mirjana Domazet-Loso"
 
 """
     getAllLCA.py - get LCA of all pairs of taxa (taxId1, taxId2)
-    Usage: time python3 getAllLCA.py -i PATH_TO_FOLDER/Data/allParents.txt -o PATH_TO_FOLDER/Data/allLCA_new.txt    
+    Usage: time python3 getAllLCA.py -i PATH_TO_FOLDER/Data/allParents.txt -o PATH_TO_FOLDER/Data/allLCA.txt    
 """
 
 

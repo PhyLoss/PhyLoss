@@ -4,8 +4,8 @@ __author__ = "Mirjana Domazet-Lošo"
 # Previous versions: 2017-2019
 
 """
-Usage: time python3 getGL.py -f 9606 -p YOUR_PATH/Data/Parents/ -i YOUR_PATH/Data/tsv_new/results_0_0/db_clu_all.tsv \
-					-l YOUR_PATH/Data/allLCA.txt -o YOUR_PATH/Data/res_dbAll_H_sap_0_0.txt -s YOUR_PATH/Data/summary_GL_H_sap_0_0.txt > out.txt
+Usage: time python3 getGL.py -f 9606 -p YOUR_PATH/Data/Parents/ -i YOUR_PATH/Data/results_0_0/db_clu_all.tsv \
+					-l YOUR_PATH/Data/allLCA.txt -o YOUR_PATH/Data/res_dbAll_H_sap_0_0.txt -s YOUR_PATH/Data/summary_GL_H_sap_0_0.txt
 """
 # Count gene gain/lost for a focal species (given taxID, e.g. 9606 H. sap. and the number of its phylostrata: 39)
 # Rules:
