@@ -38,7 +38,7 @@
 		- to get the above format for protein sequences (i.e. pid|0000000000000012601|tx|1260|), 
 			you may use the script "filter_E.sh" that generates the .faa files from the original fasta files and 
 			a file containg all genomes' taxID-s e.g. taxIDNames.txt (see (2))
-			> bash filter_E.sh taxIDNames.txt path_to_original_fasta_folder path_to_output_faa_folder > filter_E.log
+			> bash filter_E.sh taxIDNames.txt path_to_original_fasta_folder YOUR_PATH/Data/DB > filter_E.log
 
 (2) taxIDNames.txt --> save in YOUR_PATH/Data
 		(see an example file in PhyLoss/ExampleData)
@@ -195,12 +195,7 @@ REQUIREMENTS:
 	- position in the analysis folder
 		>> cd PATH_TO_ANALYSIS_FOLDER
 	
-OLD???????????
----	
-	- in the analysis folder (replace PATH_TO_ANALYSIS_FOLDER with the folder name) create the folders for the functional analysis reults, e. g.:
-		>> mkdir PATH_TO_ANALYSIS_FOLDER/cluster_hyper_cog cluster_hyper_go cluster_hyper_cog_summary_v2 cluster_hyper_go_summary_v2 phylostratum_hyper_cog_v2 phylostratum_hyper_go_v2	
----
-		
+	
 (1) computing the clusters for functional analysis using getGL_genes.py (output folder: ClusterAnalysis)
 		- in the analysis folder create the subolder "ClusterAnalysis", and its subfolders "c_0_0" to "c_0_8"
 			>> mkdir YOUR_PATH/ClusterAnalysis/COG
@@ -221,101 +216,81 @@ OLD???????????
 	Use getGL_genes.sh to get list of clusters and their genes for a focal species and all c-values (0.0 to 0.8);
 	e.g. for H. sapiens (taxID = 9606, the option -f; c=0.0, the input tsv file: -i PATH_TO_TSV_FOLDER/results_0_0/db_clu_all.tsv)
 	>> bash getGL_genes.sh 9606 \
-	> /storage/home/mdomazet/ProteinsT/Data/tsv_new \
-	> /storage/home/mdomazet/ProteinsT/Data/Parents \ 
-	> /storage/home/mdomazet/ProteinsT/Data/allLCA.txt \
-	> /storage/home/mdomazet/ProteinsT/Data/ClusterAnalysis \
-	> Hsap > geteGL_genes_Hsap.out
+			YOUR_PATH/Data/tsv_new \
+			YOUR_PATH/Data/Parents \ 
+			YOUR_PATH/Data/allLCA.txt \
+			YOUR_PATH/Data/ClusterAnalysis \
+			Hsap > geteGL_genes_Hsap.out
 	Running time: 9 x 15-20 seconds ~ 3 mins
 	
 	Output:
 		- each cluster contains a list of genes in the cluster
-		- the first row contains a cluster_ordinal_number (15), a cluster representative/geneId (pid|0000000001022418929|tx|10224|)
-			+ the number of genes in the cluster (2), phylostratum_gain (15), phylostratum_loss (17)
-		- the following rows are genes in the cluster
+		- in the example below:
+			- the first row contains a cluster_ordinal_number (1), a cluster representative/geneId (pid|0000000000000100201|tx|10020|)
+				+ the number of genes in the cluster (3), phylostratum_gain (28), phylostratum_loss (30)
+			- the following rows are genes in the cluster
 	
-	E.g.
-		15      pid|0000000001022418929|tx|10224|       2       15      17
-		pid|0000000001022418929|tx|10224|
-		pid|0000000000073753127|tx|7375|
+		E.g.
+		1       pid|0000000000000100201|tx|10020|       3       28      30
+		pid|0000000000000100201|tx|10020|
+		pid|0000000000422542821|tx|42254|
+		pid|0000000005133713766|tx|51337|
 	
 
 (2) - extract eggnog functional annotations to a folder, e. g. YOUR_PATH/Data/eggnogResults
-	E.g. (see an example file in PhyLoss/ExampleData)
+	E.g. (see an example file in PhyLoss/ExampleData or DATA-->(5))
 	- extracted files (emapper.annotations) 
 		contain list of genes withe their GO and COG annotations
 	
-	-------------
-	# emapper version: emapper-1.0.3-5-g6972f60 emapper DB: 4.5.1
-	# time: Thu Jul 23 17:46:52 2020
-	#query_name	seed_eggNOG_ortholog	seed_ortholog_evalue	seed_ortholog_score	predicted_gene_name	GO_terms	KEGG_KOs	BiGG_reactions	Annotation_tax_scope	OGs	bestOG|evalue|score	COG cat	eggNOG annot
-	pid|0000000000000008821|tx|882|	882.DVU0001	5.8e-253	878.2	DNAA	GO:0000166,GO:0001882,GO:0001883,GO:0003674,GO:0003676,GO:0003677,GO:0003688,GO:0003824,GO:0005488,GO:0005524,GO:0005575,GO:0005618,GO:0005622,GO:0005623,GO:0005737,GO:0005886,GO:0006139,GO:0006152,GO:0006163,GO:0006164,GO:0006172,GO:0006195,GO:0006200,GO:0006461,GO:0006725,GO:0006753,GO:0006793,GO:0006796,GO:0006807,GO:0008150,GO:0008152,GO:0009056,GO:0009058,GO:0009116,GO:0009117,GO:0009119,GO:0009123,GO:0009124,GO:0009125,GO:0009126,GO:0009127,GO:0009128,GO:0009132,GO:0009133,GO:0009135,GO:0009136,GO:0009141,GO:0009143,GO:0009144,GO:0009146,GO:0009150,GO:0009152,GO:0009154,GO:0009156,GO:0009158,GO:0009161,GO:0009163,GO:0009164,GO:0009165,GO:0009166,GO:0009167,GO:0009168,GO:0009169,GO:0009179,GO:0009180,GO:0009185,GO:0009188,GO:0009199,GO:0009203,GO:0009205,GO:0009207,GO:0009259,GO:0009260,GO:0009261,GO:0009987,GO:0016020,GO:0016043,GO:0016311,GO:0016462,GO:0016787,GO:0016817,GO:0016818,GO:0016887,GO:0017076,GO:0017111,GO:0018130,GO:0019438,GO:0019439,GO:0019637,GO:0019693,GO:0022607,GO:0030312,GO:0030554,GO:0032549,GO:0032550,GO:0032553,GO:0032555,GO:0032559,GO:0034641,GO:0034654,GO:0034655,GO:0035639,GO:0036094,GO:0042278,GO:0042451,GO:0042454,GO:0042455,GO:0043167,GO:0043168,GO:0043565,GO:0043933,GO:0044085,GO:0044237,GO:0044238,GO:0044248,GO:0044249,GO:0044270,GO:0044271,GO:0044281,GO:0044424,GO:0044464,GO:0044710,GO:0046031,GO:0046034,GO:0046128,GO:0046129,GO:0046130,GO:0046390,GO:0046434,GO:0046483,GO:0046700,GO:0051259,GO:0051260,GO:0055086,GO:0065003,GO:0070271,GO:0071704,GO:0071822,GO:0071840,GO:0071944,GO:0072521,GO:0072522,GO:0072523,GO:0090407,GO:0097159,GO:1901135,GO:1901136,GO:1901137,GO:1901265,GO:1901292,GO:1901293,GO:1901360,GO:1901361,GO:1901362,GO:1901363,GO:1901564,GO:1901565,GO:1901566,GO:1901575,GO:1901576,GO:1901657,GO:1901658,GO:1901659	K02313		bactNOG[38]	05CI4@bactNOG,0GB44@delNOG,16QDA@proNOG,COG0593@NOG	NA|NA|NA	L	it binds specifically double-stranded DNA at a 9 bp consensus (dnaA box) 5'-TTATC CA A CA A-3'. DnaA binds to ATP and to acidic phospholipids (By similarity)
-	.....	
-	
 	
 (3) Computing COG and GO annotations for clusters
-	--> clu_funct_analysis_v2.sh (calling cluster_function_enrichment_analysis_v4.py)
+	--- COG --- 
+	> bash getGL_genes_funct_cog.sh 9606 YOUR_PATH/Data H_sapiens_9606 > getGL_genes_funct_H_sapiens_9606.out
+	(calling getGL_genes_funct.py; 
+	the script includes option STRICT, which is initially set to "True"; which means that functions are addigned to clusters more strictly)
 	
-	IMPORTANT NOTE:
-	In script "cluster_function_enrichment_analysis_v4.py" (called from clu_funct_analysis_v2.sh) change :
-		(i) PATH_TO_ANALYSIS_FOLDER to a correct path
-    	(ii) CATEGORIES_IN_PATH = "PATH_TO_ANALYSIS_FOLDER/Data/eggnogResults" (a correct path where eggNog results files (functional annotations) are stored)
-
-	Input - an eggNog results file (a sample of our eggNog results file "chunk_0.emapper.annotations")
-	-------------
-	# emapper version: emapper-1.0.3-5-g6972f60 emapper DB: 4.5.1
-	# time: Thu Jul 23 17:46:52 2020
-	#query_name	seed_eggNOG_ortholog	seed_ortholog_evalue	seed_ortholog_score	predicted_gene_name	GO_terms	KEGG_KOs	BiGG_reactions	Annotation_tax_scope	OGs	bestOG|evalue|score	COG cat	eggNOG annot
-	pid|0000000000000008821|tx|882|	882.DVU0001	5.8e-253	878.2	DNAA	GO:0000166,GO:0001882,GO:0001883,GO:0003674,GO:0003676,GO:0003677,GO:0003688,GO:0003824,GO:0005488,GO:0005524,GO:0005575,GO:0005618,GO:0005622,GO:0005623,GO:0005737,GO:0005886,GO:0006139,GO:0006152,GO:0006163,GO:0006164,GO:0006172,GO:0006195,GO:0006200,GO:0006461,GO:0006725,GO:0006753,GO:0006793,GO:0006796,GO:0006807,GO:0008150,GO:0008152,GO:0009056,GO:0009058,GO:0009116,GO:0009117,GO:0009119,GO:0009123,GO:0009124,GO:0009125,GO:0009126,GO:0009127,GO:0009128,GO:0009132,GO:0009133,GO:0009135,GO:0009136,GO:0009141,GO:0009143,GO:0009144,GO:0009146,GO:0009150,GO:0009152,GO:0009154,GO:0009156,GO:0009158,GO:0009161,GO:0009163,GO:0009164,GO:0009165,GO:0009166,GO:0009167,GO:0009168,GO:0009169,GO:0009179,GO:0009180,GO:0009185,GO:0009188,GO:0009199,GO:0009203,GO:0009205,GO:0009207,GO:0009259,GO:0009260,GO:0009261,GO:0009987,GO:0016020,GO:0016043,GO:0016311,GO:0016462,GO:0016787,GO:0016817,GO:0016818,GO:0016887,GO:0017076,GO:0017111,GO:0018130,GO:0019438,GO:0019439,GO:0019637,GO:0019693,GO:0022607,GO:0030312,GO:0030554,GO:0032549,GO:0032550,GO:0032553,GO:0032555,GO:0032559,GO:0034641,GO:0034654,GO:0034655,GO:0035639,GO:0036094,GO:0042278,GO:0042451,GO:0042454,GO:0042455,GO:0043167,GO:0043168,GO:0043565,GO:0043933,GO:0044085,GO:0044237,GO:0044238,GO:0044248,GO:0044249,GO:0044270,GO:0044271,GO:0044281,GO:0044424,GO:0044464,GO:0044710,GO:0046031,GO:0046034,GO:0046128,GO:0046129,GO:0046130,GO:0046390,GO:0046434,GO:0046483,GO:0046700,GO:0051259,GO:0051260,GO:0055086,GO:0065003,GO:0070271,GO:0071704,GO:0071822,GO:0071840,GO:0071944,GO:0072521,GO:0072522,GO:0072523,GO:0090407,GO:0097159,GO:1901135,GO:1901136,GO:1901137,GO:1901265,GO:1901292,GO:1901293,GO:1901360,GO:1901361,GO:1901362,GO:1901363,GO:1901564,GO:1901565,GO:1901566,GO:1901575,GO:1901576,GO:1901657,GO:1901658,GO:1901659	K02313		bactNOG[38]	05CI4@bactNOG,0GB44@delNOG,16QDA@proNOG,COG0593@NOG	NA|NA|NA	L	it binds specifically double-stranded DNA at a 9 bp consensus (dnaA box) 5'-TTATC CA A CA A-3'. DnaA binds to ATP and to acidic phospholipids (By similarity)
-¸	-------------
-
-	# COG analysis:
-		- set option -C in clu_funct_analysis_v2.sh: 
-		E.g. 
-		>> cluster_function_enrichment_analysis_v4.py -C ... )
+	Running time: 
+		total (c=0.0 to 0.8): 12-13 minutes	
+		(for each c: ~1.5 min)
 	
-	# GO analysis:
-		-- set option -G in clu_funct_analysis_v2.sh: 
-		cluster_function_enrichment_analysis_v4.py -G ... )
+	--- GO --- 
+	> bash getGL_genes_funct_go.sh 9606 YOUR_PATH/Data H_sapiens_9606 > getGL_genes_funct_H_sapiens_9606_go.out
+	(calling getGL_genes_funct.py; 
+	the script includes option STRICT, if set to "True" --> stricter assignment of functions to clusters)
+
+	Output:
+		- each cluster contains a list of genes in the cluster and, if possible, each gene is assigned a list of COR or GO functions
+		- in the example below: 
+			- the first row contains a cluster_ordinal_number (2), a cluster representative/geneId (pid|0000000000010020321|tx|10020|)
+				+ the number of genes in the cluster (4), phylostratum_gain (20), phylostratum_loss (35)
+			- the following rows are genes in the cluster, and, where possible, the assigned list of functions for each gene
+			(the gene "pid|0000000000010020321|tx|10020|" is assigned the COG function "T")
 	
-		>> nohup bash clu_funct_analysis_v2.sh H > clu_funct_analysis_Hsap.out &		
+		E.g.
+		2       pid|0000000000010020321|tx|10020|       4       20      35
+		pid|0000000000010020321|tx|10020|       T
+		pid|0000000000955532907|tx|9555|        T
+		pid|0000000000850215858|tx|8502|
+		pid|0000000000786810283|tx|7868|
 
-	Output - COG anakysis:
-	(i) summary COG annotations for each cluster
-	(ii) detailed COG annotations for each cluster
-
-	Output - GO anaylsis:
-	(i) summary GO annotations for each cluster
-
-
-(4) Analysis of function enrichment per cluster
-	IMPORTANT NOTE:
-	# In script "cluster_function_enrichment_summary_cog_v2.py" change "PATH_TO_THE_ANALYSIS_FOLDER" to the correct path.
-	# In script "cluster_function_enrichment_summary_go_v4.py" change "PATH_TO_THE_ANALYSIS_FOLDER" to the correct path.
-
-	a) processing of function enrichment --per cluster-- for COG terms (computes enrichment for all focal species at once)
-		>> time python3 cluster_function_enrichment_summary_cog_v2.py > cog_v2.out &
-		
-	b) processing of function enrichment --per cluster-- for GO terms (computes enrichment for a single f. species; -p --> plotting)
-		>> time python3 cluster_function_enrichment_summary_go_v4.py -s H -c 0.8 -p > clu_funct_summary_HS_2022_c_0_8_go.out &
-
-	c) calling cluster_function_enrichment_summary_go_v4.py for c=0.0 to c=0.8; no plotting (since plotting is too slow)
-		>> nohup bash clu_funct_summary_v2.sh H > clu_funct_summary_Hsap.out &
-
-
-(5) Analysis of function enrichment per phylostratum
-	# In script "phylostratum_function_enrichment_analysis_v2.py" change "PATH_TO_THE_ANALYSIS_FOLDER" to the correct path.
-	# In script "phylostratum_function_enrichment_analysis_v3.py" change "PATH_TO_THE_ANALYSIS_FOLDER" to the correct path.
-
-	a) enrichment analysis of COG functions gained and lost --per phylostratum-- with a hypergeometric test
-		Set PARAMETER_C = 0.8, COG = True
-		>> time python3 phylostratum_function_enrichment_analysis_v3.py > phylo_cog_0_8.out &  
-		>> nohup time python3 phylostratum_function_enrichment_analysis_v2.py -s H -C -c 0.8 -p > clu_funct_analysis_HS_2022_c_0_8_cog.out &
+(4) COG anaylsis using parseClusterFunct.py
+	E.g. for H. sapiens (-P the number of phylostrata, -S the short name, -i the input data file from the step (3)
+			-c path to COG file, -o output folder)
 	
-	b) enrichment analysis of GO functions gained and lost --per phylostratum-- with a hypergeometric test
-		>> nohup bash phylostr_funct_summary_v2.sh H > phylostr_funct_summary_Hsap.out &
-			For each c-value =.0 to 0.8:
-				--> calling phylostratum_function_enrichment_analysis_v2.py -s H -G -c 0.$c
+	> bash parseClusterFunct.sh 39 Hsap PATH/Data/ClusterAnalysis/COG PATH/Data/COGs.txt
+	(calling
+		parseClusterFunct.py -P 39 -S Hsap \
+				-i YOUR_PATH/Data/ClusterAnalysis/COG/0_0/res_dbAll_H_sapiens_9606_0_0_clusters_funct.txt 
+				-c YOUR_PATH/Data/COGs.txt 
+				-o YOUR_PATH/Data/ClusterAnalysis/COG/0_0 > cog_out.txt
+	
+	Running time: 9 x 0.3 seconds ~ 3 seconds
+	
+(5) pyhlostratum analysis - analysis of function enrichment per phylostratum (including hypergeometric test)
+	> time python3 phylostratum_function_enrichment_analysis_v2_new.py \
+				-i YOUR_PATH/Data \
+				-s H -C -c 0.8 -p
+	(Options: -i input folder; -s species; -C COG functions; -G GO functions; -c c-value; -p plot results)
 		
 
 
