@@ -6,12 +6,13 @@ __author__ = "Mirjana Domazet-Lošo"
 Usage:
 	>> time python3 getGL_genes_funct.py -f 9606 \
 					-p YOUR_PATH/Data/Parents \
-					-i YOUR_PATH/Data/tsv_new/results_0_0/db_clu_all.tsv \
+					-i YOUR_PATH/Data/results_0_0/db_clu_all.tsv \
 					-l YOUR_PATH/Data/allLCA.txt \
-					-e YOUR_PATH/Data/eggnogResultsNew                    \
-					-o YOUR_PATH/Data/ClusterAnalysis/0_0/res_dbAll_Hsap_0_0_clusters_funct.txt \
-					-g YOUR_PATH/Data/ClusterAnalysis/0_0/res_dbAll_Hsap_0_0_genes_funct.txt \
-					-s YOUR_PATH/Data/ClusterAnalysis/0_0/summary_GL_Hsap_0_0_funct.txt > out_genes_funct.txt
+					-e YOUR_PATH/Data/eggnogResultsNew \
+					-C \
+					-o YOUR_PATH/Data/ClusterAnalysis/COG/0_0/res_dbAll_Hsap_0_0_clusters_funct.txt \
+					-g YOUR_PATH/Data/ClusterAnalysis/COG/0_0/res_dbAll_Hsap_0_0_genes_funct.txt \
+					-s YOUR_PATH/Data/ClusterAnalysis/COG/0_0/summary_GL_Hsap_0_0_funct.txt > out_genes_funct.txt
 """
 # Count gene gain/lost and ***functions*** for a focal species (given taxID, e.g. 9606 H. sap. and the number of its phylostrata: 39)
 # Rules:
@@ -37,17 +38,17 @@ import getopt
 import sys
 from sys import getsizeof
 
-DEBUG = True
+DEBUG = False
 
 def parseArgv(argv):
 	print("Program arguments:")
 
-	options = "hf:p:i:l:e:GCo:s:g:" # options that require arguments should be followed by :
-	long_options = ["help", "focal_species_id", "parents_directory", "input_tsv_file", "lca_file", "emapper_directory", "GO_function", "COG_function", "output_file", "summary_file", "genes_file"]
+	options = "hf:p:i:l:e:GCo:s:g:S" # options that require arguments should be followed by :
+	long_options = ["help", "focal_species_id", "parents_directory", "input_tsv_file", "lca_file", "emapper_directory", "GO_function", "COG_function", "output_file", "summary_file", "genes_file", "strict_function_assignment"]
 	try:
 		opts, args = getopt.getopt(argv, options, long_options)
 	except getopt.GetoptError:
-		print("Error. Usage: getGL_genes_funct.py -f <focal_species_id> -p <parents_directory> -i <input_tsv_file> -l <lca_file> -e <emapper_directory> -G[|-C] -o <output_file> -s <summary_file> -g <genes_file>")
+		print("Error. Usage: getGL_genes_funct.py -f <focal_species_id> -p <parents_directory> -i <input_tsv_file> -l <lca_file> -e <emapper_directory> -G[|-C] -o <output_file> -s <summary_file> -g <genes_file> [-S]")
 		sys.exit(2)
 	
 	FS_ID = ""
@@ -58,12 +59,13 @@ def parseArgv(argv):
 	SUMMARY_FILE = ""
 	GENES_FILE = ""
 	EMAPPER_DIR = ""
+	STRICT = False
 	GO = True
 	
 	for opt, arg in opts:
 		print(opt + "\t" + arg)
 		if opt in ("-h", "--help"):
-			print("Usage: getGL_genes.py -f <focal_species_id> -p <parents_directory> -i <input_tsv_file> -l <lca_file> -e <emapper_directory> -G[|-C] -o <output_file> -s <summary_file> -g <genes_file>")
+			print("Usage: getGL_genes_funct.py -f <focal_species_id> -p <parents_directory> -i <input_tsv_file> -l <lca_file> -e <emapper_directory> -G[|-C] -o <output_file> -s <summary_file> -g <genes_file> [-S]")
 			sys.exit()
 		elif opt in ("-f", "--focal_species_id"):
 			FS_ID = arg
@@ -85,8 +87,10 @@ def parseArgv(argv):
 			SUMMARY_FILE = arg
 		elif opt in ("-g", "--genes_file"):
 			GENES_FILE = arg
+		elif opt in ("-S", "--strict_function_assignment"):
+			STRICT = True
 	# end for
-	return FS_ID, PARENTS_DIR, INPUT_TSV_FILE, LCA_FILE, EMAPPER_DIR, GO, OUTPUT_FILE, SUMMARY_FILE, GENES_FILE
+	return FS_ID, PARENTS_DIR, INPUT_TSV_FILE, LCA_FILE, EMAPPER_DIR, GO, OUTPUT_FILE, SUMMARY_FILE, GENES_FILE, STRICT
 # end parseArgv
 
 
@@ -219,7 +223,6 @@ def getStrFunction(dictFunct, STRICT, numMembers, dictFunctAllClusters):
 		else:
 			thresholdNumFunctions = len(dictFunct) # all functions; no threshold
 		# end if
-		
 		for funct in dictFunct: # for functions annotated for at least half of members
 			if dictFunct[funct] >= threshold: 
 				# print quant, sample_count, cat_2_total_count[cat_id], total_count
@@ -289,7 +292,7 @@ def parseTsv(tsvFile, distPS, dictLCA, outputFile, printClusters, summaryFile, g
 							if DEBUG: print(dictFunct)
 							
 							strFunct = getStrFunction(dictFunct, STRICT, numMembers, dictFunctAllClusters)
-							if DEBUG: print(dictFunctAllClusters + "\n")
+							if DEBUG: print(dictFunctAllClusters)
 							sys.stdout.flush()
 
 							text += str(clusterId) + "\t" + prevReprId + "\t" + str(numMembers) + "\t" + psGained + "\t" + psLost + "\n" + strFunct + "\n"
@@ -406,7 +409,7 @@ def parseTsv(tsvFile, distPS, dictLCA, outputFile, printClusters, summaryFile, g
 # __main__
 if __name__ == "__main__":
 	print("__main__: Starting ... ")
-	FS_ID, PARENTS_DIR, INPUT_TSV_FILE, LCA_FILE, EMAPPER_DIR, GO, OUTPUT_FILE, SUMMARY_FILE, GENES_FILE = parseArgv(sys.argv[1:])
+	FS_ID, PARENTS_DIR, INPUT_TSV_FILE, LCA_FILE, EMAPPER_DIR, GO, OUTPUT_FILE, SUMMARY_FILE, GENES_FILE, STRICT = parseArgv(sys.argv[1:])
 	#print("TSV input file:" + INPUT_TSV_FILE)
 	#print("LCA input file:" + LCA_FILE)
 	#print("Emapper input folder:" + EMAPPER_DIR)
@@ -459,13 +462,12 @@ if __name__ == "__main__":
 	if GENES_FILE != "":
 		genesFile = open(GENES_FILE, "w")
 		printGenes = True
-	STRICT = True # strict criterion for assigning a category/function to a cluster
+	#STRICT = True # strict criterion for assigning a category/function to a cluster
 
 	print("Parsing tsv file.")
 	sys.stdout.flush()
 	parseTsv(tsvFile, dictPS, dictLCA, outputFile, printClusters, summaryFile, genesFile, printGenes, MAX_PS, dictGeneFunct, STRICT, GO)
 	print("Done.")
 	# tsvFile, outputFile, summaryFile are closed in parseTsv
-
 
 

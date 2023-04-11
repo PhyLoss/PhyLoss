@@ -7,7 +7,7 @@ __author__ = "Mirjana Domazet-Lošo"
 Usage:
 	>> time python3 getGL_genes.py -f 9606 \
 					-p	YOUR_PATH/Data/Parents/ \
-					-i	YOUR_PATH/Data/tsv_new/results_0_0/db_clu_all.tsv \
+					-i	YOUR_PATH/Data/results_0_0/db_clu_all.tsv \
 					-l	YOUR_PATH/Data/allLCA.txt \
 					-g	YOUR_PATH/Data/ClusterAnalysis/0_0/res_dbAll_Hsap_0_0_genes.txt \
 					-s	YOUR_PATH/Data/ClusterAnalysis/0_0/summary_GL_Hsap_0_0.txt > out.txt
