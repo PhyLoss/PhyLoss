@@ -185,49 +185,54 @@ REQUIREMENTS:
 PREREQUISITES:
 	- data computed using "Cluster analysis pipeline" (see above)
 
-	- to retrieve your own eggnog annotations for the files in the database
+	- to retrieve your own eggnog annotations for the files in your database
 		install EggNog mapper (https://github.com/eggnogdb/eggnog-mapper)	
 		Note: 
 			- we applied EggNog mapper to our database 
 				- emapper version: emapper-1.0.3-5-g6972f60 emapper DB: 4.5.1
 	
 REQUIREMENTS: 
-	- position in the analysis folder
-		>> cd PATH_TO_ANALYSIS_FOLDER
+	- create your analysis folder
+		> mkdir YOUR_PATH/Data/ClusterAnalysis	
 	
+	- create the output subfolders (for the COG and GO analysis; for each c-value a subfolder "c_0_0" to "c_0_8")
+		> mkdir YOUR_PATH/Data/ClusterAnalysis/COG
+		> mkdir YOUR_PATH/Data/ClusterAnalysis/GO
+		> mkdir YOUR_PATH/Data/ClusterAnalysis/COG/c_0_0 c_0_1 c_0_2 c_0_3 c_0_4 c_0_5 c_0_6 c_0_7 c_0_8
+		> mkdir YOUR_PATH/Data/ClusterAnalysis/GO/c_0_0 c_0_1 c_0_2 c_0_3 c_0_4 c_0_5 c_0_6 c_0_7 c_0_8
 	
-(1) computing the clusters for functional analysis using getGL_genes.py (output folder: ClusterAnalysis)
-		- in the analysis folder create the subolder "ClusterAnalysis", and its subfolders "c_0_0" to "c_0_8"
-			>> mkdir YOUR_PATH/ClusterAnalysis/COG
-			>> mkdir YOUR_PATH/ClusterAnalysis/GO
-			>> mkdir YOUR_PATH/ClusterAnalysis/COG/c_0_0 c_0_1 c_0_2 c_0_3 c_0_4 c_0_5 c_0_6 c_0_7 c_0_8
-			>> mkdir YOUR_PATH/ClusterAnalysis/GO/c_0_0 c_0_1 c_0_2 c_0_3 c_0_4 c_0_5 c_0_6 c_0_7 c_0_8
+(1) computing clusters for the functional analysis using getGL_genes.py
+	Note:
+	the common clusters' data required for both the COG and GO functional analysis, will be stored in the subfolder "YOUR_PATH/Data/ClusterAnalysis/COG" 
 	
 	Use getGL_genes.py to get list of clusters for a focal species and a c-value (or getGL_genes.sh for all c-values);
-	e.g. for H. sapiens (taxID = 9606, the option -f; c=0.0, the input tsv file: -i PATH_TO_TSV_FOLDER/results_0_0/db_clu_all.tsv)
-	>> time python3 getGL_genes.py -f 9606 \
+	e.g. for H. sapiens (taxID = 9606 --> the option -f 9606; 
+							c = 0.0 --> the input tsv file: -i YOUR_PATH/Data/results_0_0/db_clu_all.tsv)
+	
+	> python3 getGL_genes.py -f 9606 \
 					-p YOUR_PATH/Data/Parents/ \
-					-i PATH_TO_TSV_FOLDER/results_0_0/db_clu_all.tsv \
+					-i YOUR_PATH/Data/results_0_0/db_clu_all.tsv \
 					-l YOUR_PATH/Data/allLCA.txt \
-					-g YOUR_PATH/Data/ClusterAnalysis/0_0/res_dbAll_Hsap_0_0_genes.txt \
-					-s YOUR_PATH/Data/ClusterAnalysis/0_0/summary_GL_Hsap_0_0.txt > out.txt
+					-g YOUR_PATH/Data/ClusterAnalysis/COG/0_0/res_dbAll_Hsap_0_0_genes.txt \
+					-s YOUR_PATH/Data/ClusterAnalysis/COG/0_0/summary_GL_Hsap_0_0.txt > out.txt
 	Running time: 15-20 seconds
 	
 	Use getGL_genes.sh to get list of clusters and their genes for a focal species and all c-values (0.0 to 0.8);
-	e.g. for H. sapiens (taxID = 9606, the option -f; c=0.0, the input tsv file: -i PATH_TO_TSV_FOLDER/results_0_0/db_clu_all.tsv)
-	>> bash getGL_genes.sh 9606 \
-			YOUR_PATH/Data/tsv_new \
+	e.g. for H. sapiens (taxID = 9606 --> the option -f 9606; 
+							c = 0.0 --> the input tsv file: -i YOUR_PATH/Data/results_0_0/db_clu_all.tsv)
+	> bash getGL_genes.sh 9606 \
+			YOUR_PATH/Data \
 			YOUR_PATH/Data/Parents \ 
 			YOUR_PATH/Data/allLCA.txt \
-			YOUR_PATH/Data/ClusterAnalysis \
+			YOUR_PATH/Data/ClusterAnalysis/COG \
 			Hsap > geteGL_genes_Hsap.out
 	Running time: 9 x 15-20 seconds ~ 3 mins
 	
 	Output:
-		- each cluster contains a list of genes in the cluster
+		- each cluster contains a list of its genes
 		- in the example below:
-			- the first row contains a cluster_ordinal_number (1), a cluster representative/geneId (pid|0000000000000100201|tx|10020|)
-				+ the number of genes in the cluster (3), phylostratum_gain (28), phylostratum_loss (30)
+			- the first row contains a cluster_ordinal_number (1), a cluster representative/geneId (pid|0000000000000100201|tx|10020|),
+				the number of genes in the cluster (3), phylostratum_gain (28), phylostratum_loss (30) (from the perspective of the focal species)
 			- the following rows are genes in the cluster
 	
 		E.g.
@@ -238,16 +243,16 @@ REQUIREMENTS:
 	
 
 (2) - extract eggnog functional annotations to a folder, e. g. YOUR_PATH/Data/eggnogResults
-	E.g. (see an example file in PhyLoss/ExampleData or DATA-->(5))
-	- extracted files (emapper.annotations) 
-		contain list of genes withe their GO and COG annotations
+	E.g. (see an example file "chunk_sample.emapper.annotations" in PhyLoss/ExampleData)
 	
+	- extracted files (emapper.annotations) contain list of genes withe their GO and COG annotations
+
 	
 (3) Computing COG and GO annotations for clusters
 	--- COG --- 
 	> bash getGL_genes_funct_cog.sh 9606 YOUR_PATH/Data H_sapiens_9606 > getGL_genes_funct_H_sapiens_9606.out
 	(calling getGL_genes_funct.py; 
-	the script includes option STRICT, which is initially set to "True"; which means that functions are addigned to clusters more strictly)
+	the script includes option STRICT, if set to "True" (default: "False") --> stricter assignment of functions to clusters; at least 50% of the cluster members have to be assigned a function, for a function to be assigned to the whole cluster)
 	
 	Running time: 
 		total (c=0.0 to 0.8): 12-13 minutes	
@@ -256,15 +261,15 @@ REQUIREMENTS:
 	--- GO --- 
 	> bash getGL_genes_funct_go.sh 9606 YOUR_PATH/Data H_sapiens_9606 > getGL_genes_funct_H_sapiens_9606_go.out
 	(calling getGL_genes_funct.py; 
-	the script includes option STRICT, if set to "True" --> stricter assignment of functions to clusters)
+	the script includes option STRICT, if set to "True" (default: "False") --> stricter assignment of functions to clusters; at least 50% of the cluster members have to be assigned a function, for a function to be assigned to the whole cluster)
 
 	Output:
-		- each cluster contains a list of genes in the cluster and, if possible, each gene is assigned a list of COR or GO functions
+		- each cluster contains a list of genes in the cluster and, if possible, for each gene a list of COG or GO functions (if found using the eggnog mapper)
 		- in the example below: 
-			- the first row contains a cluster_ordinal_number (2), a cluster representative/geneId (pid|0000000000010020321|tx|10020|)
-				+ the number of genes in the cluster (4), phylostratum_gain (20), phylostratum_loss (35)
-			- the following rows are genes in the cluster, and, where possible, the assigned list of functions for each gene
-			(the gene "pid|0000000000010020321|tx|10020|" is assigned the COG function "T")
+			- the first row contains a cluster_ordinal_number (2), a cluster representative/geneId (pid|0000000000010020321|tx|10020|),
+				the number of genes in the cluster (4), phylostratum_gain (20), phylostratum_loss (35) (from the focal species perspective)
+			- the following rows correspond to the genes in the cluster, and, where possible, a list of assigned COG o GO functions for each gene
+			(in this example: the gene "pid|0000000000010020321|tx|10020|" is assigned the COG function "T")
 	
 		E.g.
 		2       pid|0000000000010020321|tx|10020|       4       20      35
