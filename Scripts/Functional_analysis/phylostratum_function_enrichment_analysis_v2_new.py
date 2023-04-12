@@ -10,7 +10,7 @@ hypergeometric test for function enrichment per phylostratum:
 
 The paths and options can be set on the start of the script by changing variables, see comments for instructions.
 """
-# Usage: python3 phylostratum_function_enrichment_analysis_v2_new.py -i PATH_TO_THE_ANALYSIS_FOLDER -s H -C -c 0.8 -p
+# Usage: python3 phylostratum_function_enrichment_analysis_v2_new.py -i YOUR_PATH/Data -s H -C -c 0.8 -p
 
 __version__ = "1.0"
 __author__ = "Tin Siroki"
@@ -37,9 +37,8 @@ OVER_UNDER_HYPER = True
 # if true performs cluster function assignment by voting
 VOTING = False
 
-#INPUT_SPECIES = {"H" : "Hsap_2022", "A" : "Athal_2022", "D" : "Dmel_2022", "S" : "Scer_2022"}
-INPUT_SPECIES = {"H" : "Hsap"}
-INPUT_SPECIES_LONG = {"H" : "Homo_sapiens_9606"}
+INPUT_SPECIES = {"H" : "Hsap", "A" : "Athal", "D" : "Dmel", "S" : "Scer"}
+INPUT_SPECIES_LONG = {"H" : "Homo_sapiens_9606", "A" : "Arabidopsis_thaliana_3702", "D" : "Drosophila_melanogaster_7227", "S" : "Saccharomyces_cerevisiae_559292"}
 PLOT_ONLY_SIGNIFICANT_CATEGORY = True
 
 # MDL, added March 23, 2021
