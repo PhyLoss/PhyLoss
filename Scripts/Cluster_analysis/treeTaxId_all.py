@@ -2,8 +2,8 @@ __version__ = "1.0"
 __author__ = "Mirjana Domazet-Loso"
 
 #
-# treeTaxId.ps - get the phylogeny tree for a taxId (print all parents up to the root)
-#	--> Run: time python3 treeTaxId_all.py -i PATH_TO_FOLDER/names_UPD.txt -j PATH_TO_FOLDER/nodes_UPD.txt -t PATH_TO_FOLDER/taxIDNames_UPD.txt -o PATH_TO_FOLDER/Parents/ > out.txt     
+# treeTaxId_all.py - get the phylogeny tree for a taxId (print all parents up to the root)
+#	--> Run: time python3 treeTaxId_all.py -i PATH_TO_FOLDER/names_All_2022.txt -j PATH_TO_FOLDER/nodes_All_2022.txt -t PATH_TO_FOLDER/taxIDNames_All_2022.txt -o PATH_TO_FOLDER/Parents/ > out.txt     
 #
 import os, sys, getopt
 
@@ -21,7 +21,8 @@ def parseArgv(argv):
     INPUT_FILE_NAMES = "" 
     INPUT_FILE_NODES = ""
     INPUT_FILE_TAXID = ""
-    OUTPUT_FOLDER = ""	
+    OUTPUT_FOLDER = ""
+	
 
     for opt, arg in opts:
         print(opt + "\t" + arg)

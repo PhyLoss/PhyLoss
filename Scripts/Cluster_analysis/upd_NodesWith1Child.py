@@ -2,17 +2,16 @@ __version__ = "1.0"
 __author__ = "Mirjana Domazet-Loso"
 
 #
-# get_NodesWith1Child.py - find parental nodes with only one child/taxon
-# November, 2022
+# upd_NodesWith1Child.py - find parental nodes with only one child/taxon
+# 2022
 #							
-#	--> Run: python3 upd_NodesWith1Child.py -i /storage/home/mdomazet/ProteinsT/Data/nodes_All_2022.txt \
-#													-j PATH/Data/names_All_2022.txt \
-#													-t PATH/Data/taxIDNames_All_2022.txt \
-#													-o PATH/Data/nodes_with1Child.txt \
-#													-n PATH/Data/nodes_All_2022_UPD.txt \ 
-#													-m PATH/Data/names_All_2022_UPD.txt \
-#													-s PATH/Data/taxIDNames_All_2022_UPD.txt > out.txt
-#
+#	--> Run: time python3 upd_NodesWith1Child.py -i PATH_TO_NODES_FILE \
+#                                                   -j PATH_TO_NAMES_FILE \
+#                                                   -t PATH_TO_TAXA_FILE \
+#                                                   -o PATH_TO_FILE_NODES_WITH_1_CHILD \
+# 													-n PATH_TO_NODES_UPD_FILE \
+#                                                   -m PATH_TO_NAMES_UPD_FILE \
+#                                                   -s PATH_TO_TAXA_UPD_FILE 
 import os, sys, getopt
 
 def parseArgv(argv):
@@ -139,12 +138,15 @@ if __name__ == "__main__":
 	outFile.close()
 	
 	# update nodes
+	#print(dictNodes)
 	writeFile(NODES_UPD_FILE, dictNodes)
 
 	# update names
+	#print(dictNames)
 	writeFile(NAMES_UPD_FILE, dictNames)
 
 	# update taxa
+	#print(dictTaxa)
 	writeFile(TAXA_UPD_FILE, dictTaxa)
 		
 	print("Done.")

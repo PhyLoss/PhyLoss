@@ -1,5 +1,5 @@
 #!/bin/bash
-# Authors: TŠ and MDL
+# Authors: MDL and TŠ
 # Scripts submits mmseqs2 clustering with c-values [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
 
 #SBATCH --job-name=mmseqs
@@ -7,16 +7,16 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=24
 #SBATCH --time=100:00:00
-#SBATCH --mem 20000
+#SBATCH --mem 40000
 
 
-echo "Starting experiment."
+echo "Starting experiment!!!"
 
 c_start=0
 c_end=0.8
 
 mkdir tmp
-mmseqs createdb ./DB/all_db.fasta db_all
+mmseqs createdb ./DB/all_db.ff db_all
 rm -rf tmp
 
 for c in $(seq $c_start 0.1 $c_end)
@@ -30,7 +30,7 @@ do
 	mkdir results_tmp
 
 	# cluster
-	time mmseqs cluster db_all ./results_tmp/db_clu_all tmp -e 0.001 -c ${c} --max-seqs 400 --cluster-mode 1 --threads 24
+	time mmseqs cluster db_all ./results_tmp/db_clu_all tmp -e 0.001 -c ${c} --max-seqs 400 --cluster-mode 1 --cov-mode 0 --threads 24
 	# generate tsv cluster file from cluster database
 	time mmseqs createtsv db_all db_all ./results_tmp/db_clu_all ./results_tmp/db_clu_all.tsv --threads 24
 
@@ -41,4 +41,4 @@ do
 
 done
 
-echo "Experiment done."
+echo "Experiment done"
