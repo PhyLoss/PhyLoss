@@ -1,1 +1,2 @@
 9606	Homo_sapiens
+7227	Drosophila_melanogaster
