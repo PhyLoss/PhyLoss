@@ -148,7 +148,7 @@ def parseTsv(tsvFile, distPS, dictLCA, printClusters, outputFile, summaryFile, M
 	# 	In conclusion:
 	# 	Only cases (1a), (2) and (3) are USED FOR COMPUTING GENE FAMILIES GAINED/LOST FROM THE FOCAL SPECIES PERSPECTIVE	
 	#
-	# 	Note: each cluster included in the gene families' gain/loss shoudl have at least two members (singleton-clusters are not included in the analysis).
+	# 	Note: each cluster included in the gene families' gain/loss analysis should have at least two members (singleton-clusters are not included in the analysis).
 	
 	for line in tsvFile: # representativeID taxID
 		array = line.split()
