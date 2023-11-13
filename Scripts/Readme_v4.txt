@@ -147,15 +147,19 @@ REQUIREMENTS:
 		- treeTaxId_all.py
 		- upd_NodesWith1Child.py		
 
-(CA-1) Concatenate all DB fasta files to a single faa file "all_db.faa" (in the subolder "DB")	
-	> cat YOUR_PATH/Data/DB/*.faa > YOUR_PATH/Data/DB/all_db.faa
+(CA-1) Concatenate all DB fasta files to a single faa file "db_all.faa" (in the subolder "DB")	
+	> cat YOUR_PATH/Data/DB/*.faa > YOUR_PATH/Data/DB/db_all.faa
 
 
 (CA-2) Position to the folder "YOUR_PATH/Data"
 	> cd YOUR_PATH/Data
 
 
-(CA-3) Run the mmseqs cluster [1] program 
+(CA-3) 
+	a) Run the mmseqs createdb [1] program to create the "db_all" from "db_all.faa"
+	> mmseqs createdb db_all.faa db_all
+	
+	b) Run the mmseqs cluster [1] program 
 	(we used the following options: -e 0.001 --max-seqs 400 --cluster-mode 1 --cov-mode 0; -c 0.0 to 0.8)
 	> bash submit_cluster_c.sge &
 	Alternatively: run the script using qsub
@@ -447,6 +451,98 @@ REQUIREMENTS:
 					the default is false; it may be very slow in case of GO functions)		
 
 
+
+----------- MCL ANALYSIS PIPELINE -----------
+PREREQUISITES:
+	- for MMseqs2 search analysis:
+		install program MMseqs2 (https://github.com/soedinglab/MMseqs2) [1]
+	
+	- for MCL analysis:
+		install MCL [6]
+
+(MCL-1) 
+	a) Run the mmseqs createdb [1] program to create the "db_all" from "db_all.faa" (if not already created at the step (CA-3))
+	> mmseqs createdb db_all.faa db_all
+
+	b) run the mmseqs search [1] on the db_all for each c = 0.0 to 0.8 (the results of the mmseqs search analysis are the input for MCL analysis): 
+	> mmseqs search db_all db_all resultDB tmp -e 0.001 -c 0.8 --max-seqs 400 -s 4
+		(-c 0.8 can be replaces with any other c-value 0.0 to 0.7)
+	
+	c) convert the results of the mmseqs search analysis to the input for MCL analysis: 
+	> mmseqs convertalis db_all db_all resultDB result_0_8.tab --format-output "query,target,evalue,bits,alnlen,qlen,tlen"
+	
+(MCL-2)
+	a) sorting the mmseqs search results (sorting by query taxId(numerically), subject taxId (numerically), query pid (numerically), subject pid (numerically): 
+	e. g.
+	--> sort -t '|' -k4,4n -k8,8n -k2,2n -k6,6n result_0_8.tab -o result_0_8_sorted.tab
+	
+	b) normalize the mmseqs search bit scores using the adapted OrthoFinder's algorithm [7] --> using the "normBitScore.py" script 
+	e.g.
+	> python3 normBitScore.py -i result_0_8_sorted.tab -o norm_0_8_sorted.tab
+	
+	The adapted OrthoFinder's algorithm [7]:
+	# for each query_taxID # q
+	#	for each subject_taxID # h
+	# 		read all rows for q, h (since the data are sorted by query_taxID, subject_taxID)
+	#		while reading compute for each row: L_q_h (L_q x L_h)
+	#		count rows for q, h
+	# 		sort by L_q_h
+	#		split rows in bins of size = 10^3 according to L_q_h
+	#		for each bin
+	#			select the top 5% S'(i.e. B_q_h) 
+	#			compute a, b using lin. regression (least squares) in log10(B_q_h) = a x log10(L_q_h) + b
+	#			normalise each B_q_h --> B_q_h' = B_q_h / (10^b x L_q_h^a)
+	#
+
+(MCL-3) Compute taxId_ps_Hsap.txt --> for each taxon in the database find the LCA when to compared to H. sapiens as the focal species 
+	Required input:
+	- the focal species is set using the -f option; here the focal species is H. sapiens (taxId = 9606), so we use the option "-f 9606"
+	- the file "allParents.txt" (see step (CA-5b)), which comprises the list of parents for each taxon in the database
+	
+	> python3 getAllPS.py -f 9606 -i allParents.txt -p ./Parents -o taxId_ps_Hsap.txt
+		
+(MCL-4)
+	-- Analysis of the mmseqs search output using the neg. logarithm of the E-value as a distance ---
+	a) transform the mmseqs search output to abc input from mcxload (done for each c-value; in the example below shown for c=0.8)
+	> cut -f 1,2,3 result_0_8.tab > result_0_8.abc
+
+	b) run mcxload [6] to get binary input for mcl (done for each c-value; in the example below shown for c=0.8)
+	> mcxload -abc result_0_8.abc --stream-mirror --stream-neg-log10 -stream-tf 'ceil(200)' -o result_0_8_bin.mci -write-tab result_0_8_bin.tab --write-binary
+	
+	c) run MCL [6] for I=2, I=1.5 for each c-value (in the example below shown for c=0.8)
+	> mcl result_0_8_bin.mci -I 2 -use-tab result_0_8_bin.tab -o mcl_I_2_0_8.out	
+	> mcl result_0_8_bin.mci -I 1.5 -use-tab result_0_8_bin.tab -o mcl_I_1_5_0_8.out
+	
+	d) parse MCL for I=2, I=1.5 output to get gene families gain/loss over all clusters for each c-value (in the example below shown for c=0.8)
+	> python3 parseMCL_2_strict.py -i mcl_I_2_0_8.out.txt -p taxId_ps_Hsap.txt -P 40 \
+							-o clu_mcl_I_2_0_8.txt -s summary_mcl_I_2_0_8.txt
+	
+	> python3 parseMCL_2_strict.py -i mcl_I_1_5_0_8.out.txt -p taxId_ps_Hsap.txt -P 40 \
+							-o clu_mcl_I_1_5_0_8.txt -s summary_mcl_I_1_5_0_8.txt
+	
+(MCL-5)
+	-- Analysis of the mmseqs search output using the normalized bit-score as a distance (the output of the step (MCL-2)) ---
+
+	b) run mcxload [6] to get binary input for mcl (done for each c-value; in the example below shown for c=0.8)
+	# Please note that the default course of action for mcxload is to use the best value found between a pair of labels. 
+	# The bit scores were already normalized in (MCL-2), so I don't use the options --stream-neg-log10 -stream-tf 'ceil(200)' (see (MCL-4))
+	# Instead of the option --stream-mirror, I use -ri max, since it uses less memory.
+
+	> mcxload -abc norm_0_8_sorted.tab -ri max  -o norm_0_8_bin.mci -write-tab norm_0_8_bin.tab --write-binary
+	
+	c) run MCL [6] for I=2, I=1.5 for each c-value (in the example below shown for c=0.8)
+	> mcl norm_0_8_bin.mci -I 2 -use-tab norm_0_8_bin.tab -o mcl_norm_I_2_0_8.out	
+	> mcl norm_0_8_bin.mci -I 1.5 -use-tab norm_0_8_bin.tab -o mcl_norm_I_1_5_0_8.out
+
+	d) parse MCL for I=2, I=1.5 output to get gene families gain/loss over all clusters for each c-value (in the example below shown for c=0.8)
+	> python3 parseMCL_2_strict.py -i mcl_norm_I_2_0_8.out.txt -p taxId_ps_Hsap.txt -P 40 \
+							-o clu_mcl_norm_I_2_0_8.txt -s summary_mcl_norm_I_2_0_8.txt
+	
+	> python3 parseMCL_2_strict.py -i mcl_norm_I_1_5_0_8.out.txt -p taxId_ps_Hsap.txt -P 40 \
+							-o clu_mcl_norm_I_1_5_0_8.txt -s summary_mcl_norm_I_1_5_0_8.txt
+
+	
+-------------------------------------------
 References:
 [1] Steinegger M and Soeding J. MMseqs2 enables sensitive protein sequence searching for the analysis of massive data sets. 
 	Nature Biotechnology, doi: 10.1038/nbt.3988 (2017).
@@ -463,8 +559,15 @@ References:
     Molecular Biology and Evolution, msab293, https://doi.org/10.1093/molbev/msab293
 
 
-[4] http://geneontology.org/docs/download-ontology/ [3]
+[4] http://geneontology.org/docs/download-ontology/
 
-[5] http://clovr.org/docs/clusters-of-orthologous-groups-cogs/ [4]
+[5] http://clovr.org/docs/clusters-of-orthologous-groups-cogs/
+
+[6] van Dongen, Stijn, Graph clustering via a discrete uncoupling process, 
+	Siam Journal on Matrix Analysis and Applications 30-1, p121-141, 2008. (https://doi.org/10.1137/040608635)
+	
+[7] Emms DM, Kelly S. OrthoFinder: solving fundamental biases in whole genome comparisons dramatically 
+	improves orthogroup inference accuracy. Genome Biol. 2015 Aug 6;16(1):157. doi: 10.1186/s13059-015-0721-2
+
 
 
