@@ -1,6 +1,6 @@
 __version__ = "1.0"
 __author__ = "Mirjana Domazet-Lošo"
-# February 6, 2023
+# 2022-2023
 
 """
 Usage:
