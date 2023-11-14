@@ -1,6 +1,6 @@
 __version__ = "1.0"
 __author__ = "Mirjana Domazet-Lošo"
-# April 14, 2022
+# 2022-2023
 
 """
 Usage: python3 getAllPS.py -f 9606 -i allParents.txt -p ./Parents -o taxId_ps_Hsap.txt

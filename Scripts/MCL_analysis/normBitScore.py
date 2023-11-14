@@ -1,5 +1,6 @@
 __version__ = "1.0"
 __author__ = "Mirjana Domazet-Loso"
+# 2023
 
 #
 # normBitScore.py - normalize bit scores for each species pair (query, subject); 
