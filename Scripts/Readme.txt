@@ -140,9 +140,12 @@ PREREQUISITES:
 
 REQUIREMENTS: 
 	- list of SCRIPTS files (see the folder "PhyLoss/Scripts")
-		- getAllLCA.py
+		- clean.py
+		- convertAll.py
 		- get_PS_short_names.py
+		- getAllLCA.py
 		- getGL.py
+		- nodesGTL.py
 		- submit_cluster_c.sge
 		- treeTaxId_all.py
 		- upd_NodesWith1Child.py		
@@ -297,7 +300,7 @@ REQUIREMENTS:
 		Singleton clusters are excluded from the analysis.
 
 	Input: 
-		(i) an input folder with subfolders containing gene families total/gain/loss (EDIT!!)
+		(i) an input folder or multiple input folders containing gene families total/gain/loss (EDIT!!)
 		(ii) the parents input folder, e.g. "Parents" (see (CA-5a))
 		(iii) the names file (see DATA REQUIRED FOR THE CLUSTER ANALYSIS PIPELINE - (4); e.g. "names.txt" )
 
@@ -314,7 +317,7 @@ REQUIREMENTS:
 			"n.a." (the 5th column) is the number of gene families lost at the node 
 				(in this example "n.a."/"not available", since no gene families were at lost at this node)	
 
-	> python3 nodesGTL.py -i INPUT_FOLDER -o OUTPUT_FOLDER -p PARENTS_FOLDER -n NAMES_FILE
+	> python3 nodesGTL.py -i INPUT_FOLDER [-i INPUT_FOLDER2 ...] -o OUTPUT_FOLDER -p PARENTS_FOLDER -n NAMES_FILE
 
 	
 
