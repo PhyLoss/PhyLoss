@@ -23,6 +23,8 @@
 	> mkdir Data/DB	
 
 ***** DATA REQUIRED FOR THE CLUSTER ANALYSIS PIPELINE *****
+Please note that our original database (1) and the accompanying files (2)-(4) can be freely downloaded from:
+doi:10.6084/m9.figshare.20522103
 
 (1) a database that contains protein sequences in fasta format, 
 	i.e. a list of fasta files (a single file for each species) in the format taxId.faa ("taxID" is replaced with a true taxID of the species)
