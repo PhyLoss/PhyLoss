@@ -64,7 +64,7 @@ def printList(rFile, headerLine, listGeneId):
 
 # auxiliary function - resolve the previous line
 def resolvePrevGene(seqLen, listShort, listLong, listStop, geneId, geneHeader, dictSeq, dictMul, listGeneId, seq):
-	# skip delete proteins shorter than MIN_LEN and longer than MAX_LEN a.a.
+	# delete proteins shorter than MIN_LEN and longer than MAX_LEN a.a.
 	# or containing "*" in the middle of the sequence
 	if seqLen <= MIN_LEN:
 		listShort.append(geneHeader + "\t" + geneId)				
