@@ -4,7 +4,6 @@ __author__ = "Mirjana Domazet-Loso"
 #
 # clean.py - clean proteins sequences
 #	--> in case of multiple splicing variants, keep the protein with the longest sequence, and other variants (proteins with the same name) delete
-#		--> here: multiple variants are found and deleted using filter.py??
 #	--> delete proteins shorter than MIN_LEN and longer than MAX_LEN a.a.
 #	--> delete proteins containing "*" in the middle of the sequence
 #	--> Later: (after the mmseqs search has been done) delete proteins from the input list no_self_hits.txt (i.e. protein seq-s with no self-hits obtained using mmseqs search)
