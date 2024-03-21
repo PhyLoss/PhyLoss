@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# MDL, 2203/2024
+TAXID_FILE=${PATH1}"/taxIDNames.txt"
+DATA_PATH=$PATH1"/DB"
+OUT_PATH=$PATH1"/DB"
+
+# read taxId-s into array arrId
+declare -a arrId
+declare -a arrSpecies
+
+cnt=0
+while read -r line; do
+	line="${line%%*( )}"
+	arrSpecies[cnt]=$line
+	arr=(${arrSpecies[cnt]}) # split line in two items
+	arrId[cnt]=${arr[0]}
+	#echo "${arrId[cnt]}"
+	cnt=$cnt+1
+done <$TAXID_FILE
+ 
+
+echo "Starting experiment."
+
+for (( i=0 ; i<$cnt ; i++ )); 
+do
+	taxId=${arrId[$i]}
+	mmseqs easy-search $DATA_PATH"/"${taxId}".faa" $DATA_PATH"/"${taxId}".faa" $OUT_PATH"/hits_"${taxId}".txt" --threads $NCPUS tmp --format-output "query,target,evalue" --exhaustive-search --max-seqs 10000000 -e 1e-3
+	python3 get_self_hits.py -i $OUT_PATH"/hits_"${taxId}".txt" -o $OUT_PATH"/s_hits_"${taxId}".txt"
+	rm $OUT_PATH"/hits_"${taxId}".txt"
+done
+echo "Done."
