@@ -1,5 +1,5 @@
 # Author: Mirjana Domazet-Loso
-# 2022 - 2023
+# 2022 - 2024
 # Contact: Mirjana.Domazet-Loso@fer.hr
 #------------------------------------------
 #
