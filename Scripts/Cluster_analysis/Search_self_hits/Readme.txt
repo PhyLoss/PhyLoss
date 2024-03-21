@@ -8,7 +8,7 @@
 	
 	>python3 find_all_genes.py -d DB_PATH -o GENES_PATH
 	
-	--> generates a list of all the genes within the database (from the DB folder)
+	--> generates a list of all genes within the database (from the DB folder)
 	Input:
 		DB_PATH --> folder containing taxId.faa files
 	Output:
