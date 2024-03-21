@@ -23,8 +23,6 @@
 	> mkdir Data/DB	
 
 ***** DATA REQUIRED FOR THE CLUSTER ANALYSIS PIPELINE *****
-Please note that our original database (1) and the accompanying files (2)-(4) can be freely downloaded from:
-doi:10.6084/m9.figshare.20522103
 
 (1) a database that contains protein sequences in fasta format, 
 	i.e. a list of fasta files (a single file for each species) in the format taxId.faa ("taxID" is replaced with a true taxID of the species)
@@ -60,6 +58,7 @@ doi:10.6084/m9.figshare.20522103
 		(**) We additionally removed the protein sequences without self-hits.
 				To find the protein sequences without self-hits, we compared each sequence to itself using MMseqs2 easy-search with the following options:
 				--exhaustive-search -e 10e-3 --max-seqs 10000000
+				(see Scripts/Cluster_analysis/Search_self_hits/Readme.txt for more details)
 				(MMseqs2; Steinegger M and Soeding J. 2017 [1])
 		
 		(***) Finally, we applied the BUSCO analysis (BUSCO v5.4.3 analysis [2]) to our taxId.faa fasta files and replaced or removed low-quality files.		
@@ -302,7 +301,7 @@ REQUIREMENTS:
 		Singleton clusters are excluded from the analysis.
 
 	Input: 
-		(i) an input folder or multiple input folders containing gene families total/gain/loss (EDIT!!)
+		(i) an input folder or multiple input folders containing gene families total/gain/loss
 		(ii) the parents input folder, e.g. "Parents" (see (CA-5a))
 		(iii) the names file (see DATA REQUIRED FOR THE CLUSTER ANALYSIS PIPELINE - (4); e.g. "names.txt" )
 
